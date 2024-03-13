@@ -18,7 +18,7 @@ const Navbar = () => {
       <div className={styles.navbarDesktop}>
         <ul>
           <Link href="/home">
-            <h2>ReMovies</h2>
+            <h2>Curso</h2>
           </Link>
           <Link href="/home">
             <li>Inicio</li>

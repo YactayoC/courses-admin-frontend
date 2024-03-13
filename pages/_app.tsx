@@ -1,15 +1,13 @@
 import type { AppProps } from "next/app";
-
-import { Provider as ProviderRedux } from "react-redux";
-import { store } from "store";
+import { Provider } from "jotai"
 
 import "styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ProviderRedux store={store}>
+    <Provider>
       <Component {...pageProps} />
-    </ProviderRedux>
+    </Provider>
   );
 }
 

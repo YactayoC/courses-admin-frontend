@@ -5,48 +5,70 @@ import Loader from 'components/loader/loader';
 import styles from 'styles/Home.module.css';
 import { CursoItemI } from 'interfaces/cursoItem';
 import { useEffect, useState } from 'react';
-
+import { getCommentsByIdCourse, addComment, deleteComment } from 'services/comment';
+import { Comentario } from 'interfaces/comment';
+import { useForm } from 'react-hook-form';
+import { useAtom } from 'jotai';
+import { userAtom } from 'store/userAtom';
 interface Props {
   courseContent: CursoItemI;
   isLoading: boolean;
 }
 
-const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true }) => {
 
+const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true }) => {
+  const [comentarios, setComentarios] = useState<Comentario[]>([]);
+  const [user] = useAtom(userAtom);
+  const [courseId, setCourseId] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado inicial falso
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset,
+  } = useForm<Comentario>();
+
+  const handleGetCommentsByIdCourse = async (idCourse: string) => {
+    const response = await getCommentsByIdCourse(idCourse);
+    setComentarios(response.comentarios);
+    setCourseId(String(courseContent.id));
+  }
   if (isLoading) {
     return <Loader />;
   }
-  //log(courseContent)
 
-  const comentariosMock = [
-    { id: 1, texto: '¡Excelente curso!', usuario: 'Usuario1' },
-    { id: 2, texto: 'Me ayudó mucho, ¡gracias!', usuario: 'Usuario2' },
-    // Otros comentarios...
-  ];
-
-  const [comentarios, setComentarios] = useState(comentariosMock);
-
-  useEffect(() => {
-    // Aquí deberías hacer la consulta a la base de datos para obtener los comentarios
-    // Ejemplo de cómo puedes hacerlo con fetch:
-    /*
-    fetch('URL_DE_TU_API/comentarios')
-      .then(response => response.json())
-      .then(data => setComentarios(data))
-      .catch(error => console.error('Error fetching comments:', error));
-    */
-
-    // Por ahora, utilizaremos un array de comentarios de ejemplo:
-    setComentarios(comentariosMock);
-  }, []);
+  const handleAddComment = async (data: Comentario) => {
+    await addComment({ usuarioId: Number(user?.id), cursoId: Number(courseId), comentario: data.comentario });
+    handleGetCommentsByIdCourse(String(courseContent.id));
+    reset();
+  };
 
   const convertLinkEmbed = (link: string) => {
-    //const linkYt = courseContent.video_iframe;
     const linkEmbed = link.replace('watch?v=', 'embed/');
     return linkEmbed;
   }
 
   const linkEmbed = convertLinkEmbed(courseContent.video_iframe);
+
+  const convertToDate = (date: string) => {
+    const dateParsed = new Date(date);
+    return dateParsed.toLocaleDateString();
+  }
+
+  const convertToHour = (date: string) => {
+    const dateParsed = new Date(date);
+    return dateParsed.toLocaleTimeString();
+  }
+
+  useEffect(() => {
+    handleGetCommentsByIdCourse(String(courseContent.id));
+  }, []);
+
+  useEffect(() => {
+    const userFromLocalStorage = localStorage.getItem('user');
+    setIsLoggedIn(!!userFromLocalStorage);
+  }, []);
 
   return (
     <>
@@ -78,20 +100,85 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
             textAlign: 'center',
           }}
         >{courseContent.descripcion}</p>
-        <div >
-          <h2>Comentarios:</h2>
-          <ul className={styles.commentsList}>
-            {comentarios.map(comentario => (
-              <li key={comentario.id} className={styles.comment}>
-                <div className={styles.commentHeader}>
-                  <strong>{comentario.usuario}:</strong>
+        <div
+          style={{
+            width: '80%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            rowGap: '2rem',
+          }}
+        >
+
+          {isLoggedIn ? (
+            <form style={{ width: '80%', display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit(handleAddComment)}>
+              <div className="input-group mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Inserte comentario"
+                  aria-label="Recipient's username"
+                  aria-describedby="button-addon2"
+                  style={{
+                    height: '3.5rem',
+                  }}
+                  {...register('comentario', { required: true })} // Vincula el input al estado con useForm
+                />
+                <button className="btn btn-outline-secondary" type="submit" id="button-addon2">Guardar comentario</button>
+              </div>
+              {errors.comentario && <span style={{ color: 'red', marginTop: '-1rem' }}>Este campo es requerido.</span>}
+            </form>) : (<></>)}
+          <div
+            style={{
+              width: '100%',
+              // backgroundColor: '#F5F5F5',
+              padding: '3rem',
+              borderRadius: '0.8rem',
+            }}
+          >
+            {comentarios.map((comment) => (
+              <div key={comment.id} className="media mb-4" style={{
+                padding: '1.8rem 2rem',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                borderRadius: '0.8rem',
+                backgroundColor: '#F5F5F5',
+              }}>
+                <img
+                  src="https://via.placeholder.com/64"
+                  className="mr-3 rounded-circle"
+                  alt="Avatar"
+                  style={{ width: '64px', height: '64px' }}
+                />
+                <div className="media-body">
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      columnGap: '1rem',
+                    }}
+                  >
+                    <h5
+                      style={{
+                        marginBottom: '0',
+                      }}
+                    >{comment.nombre}</h5>
+                    <p
+                      style={{
+                        color: 'gray',
+                      }}
+                    >{convertToHour(comment.fecha)}</p>
+                  </div>
+                  <p
+                    style={{
+                      marginBottom: '0.5rem',
+                      marginTop: '0.5rem',
+                    }}
+                  >{comment.comentario}</p>
+                  <small className="text-muted">Subido el día {convertToDate(comment.fecha)}</small>
                 </div>
-                <div className={styles.commentBody}>
-                  {comentario.texto}
-                </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     </>

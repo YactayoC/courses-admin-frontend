@@ -3,17 +3,21 @@ import Link from 'next/link';
 import { AuthLayout } from 'components';
 import { useForm } from 'react-hook-form';
 import { loginUser } from 'services/auth';
-
+import { useAtom } from 'jotai';
 import stylesAuth from 'styles/Auth.module.css';
 import { useRouter } from 'next/router';
+import { userAtom } from 'store/userAtom';
 
 const LoginPage = () => {
+  const [, setUser] = useAtom(userAtom);
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const fetchAuthLogin = async (data: any) => {
     try {
       const response = await loginUser(data);
-      console.log(response);
+      setUser(response.user);
+      localStorage.setItem('user', JSON.stringify(response.user));
+      console.log(response.user)
       router.push('/home');
     } catch (error) {
       console.error(error);

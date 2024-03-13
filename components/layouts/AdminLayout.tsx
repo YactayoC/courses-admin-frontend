@@ -10,7 +10,6 @@ const AdminLayout = ({ children }: Props) => {
     <div className="hold-transition sidebar-mini layout-fixed">
       <div className="wrapper">
         <Sidebar />
-
         {children}
         <footer className="main-footer">All rights reserved.</footer>
       </div>

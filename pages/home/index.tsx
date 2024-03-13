@@ -11,11 +11,16 @@ import { CategoryI } from 'interfaces/categorias';
 import { toast } from 'react-toastify';
 import { CursosI } from 'interfaces/cursos';
 import { getCursos } from 'services/cursos';
+import { useAtom } from 'jotai';
+import { userAtom } from 'store/userAtom';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryI[]>([{}] as CategoryI[]);
   const [courses, setCourses] = useState<CursosI[]>([{} as CursosI]);
+  const [user] = useAtom(userAtom);
+
+  console.log(user)
 
   const fetchCategorias = async () => {
     try {
