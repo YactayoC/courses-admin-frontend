@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+@import './adminlte.css';
+@import 'react-toastify/dist/ReactToastify.css';
+@import 'react-responsive-modal/styles.css';
+
+:root {
+  --primary-color-text: #241e38;
+  --secondary-color-text: #a9a9ac;
+  --color-button: #f40612;
+  --color-button-hover: #bb0a12;
+  --color-button-info: #6d6d6e;
+  --color-button-info-hover: #505050;
+  --color-logo: #e50914;
+  --color-input: #333;
+}
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0eef6;
+  color: var(--primary-color-text);
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+icon-custom {
+  font-size: 10rem;
+  font-weight: 700;
+}
+
+ul {
+  list-style: none;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  display: flex;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--color-button-info);
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-button-info-hover);
+}
+
+body::-webkit-scrollbar-thumb:active {
+  background-color: var(--color-button-info-hover);
+}
+
+body::-webkit-scrollbar-track {
+  background: rgb(177, 175, 175);
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-track:hover,
+body::-webkit-scrollbar-track:active {
+  background: #d4d4d4;
+}
