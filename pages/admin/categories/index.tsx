@@ -47,12 +47,12 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
   const handleEditCategoria = async (id: number, data: CategoryI) => {
     try {
       const response = await editarCategoria(id, data);
-      console.log(response)
+      //console.log(response)
       toast.success(response.message);
       reset();
       fetchCategorias();
       setShowModalEdit(false);
-      console.log(data)
+      //console.log(data)
     } catch (error) {
       toast.error('No se pudo editar la categoria');
     }
@@ -84,7 +84,7 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
   const fetchCategoriaById = async (id: number) => {
     try {
       const response = await obtenerCategoriaPorId(id);
-      console.log(response.categoria[0])
+      //console.log(response.categoria[0])
       setCategoryDataById(response.categoria[0]);
     } catch (error) {
       toast.error('No se pudo cargar la categoria');

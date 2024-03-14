@@ -1,13 +1,15 @@
 import type { AppProps } from "next/app";
 import { Provider } from "jotai"
-
+import AuthGuard from "guards/authGuard";
 import "styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider>
-      <Component {...pageProps} />
-    </Provider>
+    <AuthGuard>
+      <Provider>
+        <Component {...pageProps} />
+      </Provider>
+    </AuthGuard>
   );
 }
 

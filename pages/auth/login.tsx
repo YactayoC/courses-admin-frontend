@@ -7,6 +7,7 @@ import { useAtom } from 'jotai';
 import stylesAuth from 'styles/Auth.module.css';
 import { useRouter } from 'next/router';
 import { userAtom } from 'store/userAtom';
+import { Role } from 'guards/roles';
 
 const LoginPage = () => {
   const [, setUser] = useAtom(userAtom);
@@ -17,8 +18,15 @@ const LoginPage = () => {
       const response = await loginUser(data);
       setUser(response.user);
       localStorage.setItem('user', JSON.stringify(response.user));
-      console.log(response.user)
-      router.push('/home');
+      const userRolName = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).rol_name : null;
+      //console.log(response.user)
+      if (userRolName === Role.Admin) {
+        router.push('/admin/courses');
+        return
+      } else if (userRolName === Role.Cliente) {
+        router.push('/home');
+        return
+      }
     } catch (error) {
       console.error(error);
     }

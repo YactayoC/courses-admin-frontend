@@ -1,6 +1,9 @@
 .hero {
+  /* background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0, transparent 60%, rgba(0, 0, 0, 0.8)),
+    url('https://i.ytimg.com/vi/grZFgo72S-I/maxresdefault.jpg'); */
+
   background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0, transparent 60%, rgba(0, 0, 0, 0.8)),
-    url('https://i.ytimg.com/vi/grZFgo72S-I/maxresdefault.jpg');
+    url('https://static.vecteezy.com/system/resources/previews/001/249/478/non_2x/science-education-and-laboratory-banner-template-vector.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -47,10 +50,11 @@
 }
 
 /* Movies  */
-.allMovies {
+.allCourses {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 3rem;
 }
 
 .movieSelected {

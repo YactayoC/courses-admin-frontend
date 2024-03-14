@@ -13,8 +13,8 @@ const RegisterPage = () => {
 
   const fetchAuthRegister = async (data: any) => {
     try {
-      const response = await registerUser(data);
-      console.log(response);
+      await registerUser(data);
+      //console.log(response);
       router.push('/auth/login');
     } catch (error) {
       console.error(error);

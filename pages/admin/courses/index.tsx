@@ -40,7 +40,7 @@ const CoursesPage = () => {
       formData.append('categoria_id', Number(data.categoria_id).toString());
       formData.append('descripcion', data.descripcion);
       formData.append('file', data.file[0]);
-      console.log(data)
+      //console.log(data)
       const response = await addCurso(formData);
       toast.success(response.message);
       reset();
@@ -148,7 +148,11 @@ const CoursesPage = () => {
                   <tr key={course.id}>
                     <td>{course.nombre}</td>
                     <td>
-                      <img src={course.imagen_url} alt="Imagen" style={{ width: '100px' }} />
+                      <img src={course.imagen_url} alt="Imagen" style={{
+                        width: '8rem',
+                        height: '6rem',
+                        objectFit: 'cover',
+                      }} />
                     </td>
                     <td>{course.descripcion}</td>
                     <td>{course.categoria_nombre}</td>

@@ -1,10 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
+import { userAtom } from 'store/userAtom';
 
 const Sidebar = () => {
+  const [user] = useAtom(userAtom);
+  const [usename, setUsename] = useState('');
   const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    router.push('/auth/login');
+  }
+
+  useEffect(() => {
+    if (user) {
+      setUsename(user.nombre);
+    }
+  }, [user]);
 
   return (
     <>
@@ -45,7 +60,7 @@ const Sidebar = () => {
             </div>
             <div className="info">
               <a href="#" className="d-block">
-                Admin
+                {usename}
               </a>
             </div>
           </div>
@@ -74,8 +89,8 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link href="/admin">
-                  <a className="nav-link">
+                <Link href="/auth/login">
+                  <a className="nav-link" onClick={handleLogout}>
                     <i className="nav-icon fas fa-sign-out-alt"></i>
                     <p>Salir</p>
                   </a>
@@ -84,7 +99,7 @@ const Sidebar = () => {
             </ul>
           </nav>
         </div>
-      </aside>
+      </aside >
     </>
   );
 };

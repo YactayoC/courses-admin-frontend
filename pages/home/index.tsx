@@ -2,7 +2,6 @@
 
 import { HomeLayout, ListCourses, Navbar } from 'components';
 import Loader from 'components/loader/loader';
-import { useAppSelector } from 'hooks';
 
 import styles from 'styles/Home.module.css';
 import { useEffect, useState } from 'react';
@@ -20,7 +19,7 @@ const HomePage = () => {
   const [courses, setCourses] = useState<CursosI[]>([{} as CursosI]);
   const [user] = useAtom(userAtom);
 
-  console.log(user)
+  //console.log(user)
 
   const fetchCategorias = async () => {
     try {
@@ -60,15 +59,17 @@ const HomePage = () => {
         <div className={styles.hero}>
           <Navbar />
         </div>
-        {categories
-          .filter(category => category.id !== undefined) // Filtrar elementos vacíos
-          .filter(category => courses.filter(curso => curso.categoria_id === category.id).length > 0)
-          .map((category) => (
-            <div className={styles.movieCategory} key={category.id}>
-              <h2>{category.nombre}</h2>
-              <ListCourses items={courses.filter((curso) => curso.categoria_id === category.id)} />
-            </div>
-          ))}
+        <div className={styles.allCourses}>
+          {categories
+            .filter(category => category.id !== undefined) // Filtrar elementos vacíos
+            .filter(category => courses.filter(curso => curso.categoria_id === category.id).length > 0)
+            .map((category) => (
+              <div className={styles.movieCategory} key={category.id}>
+                <h2>{category.nombre}</h2>
+                <ListCourses items={courses.filter((curso) => curso.categoria_id === category.id)} />
+              </div>
+            ))}
+        </div>
       </HomeLayout>
     </>
   );

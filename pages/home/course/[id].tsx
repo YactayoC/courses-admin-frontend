@@ -49,8 +49,6 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
     return linkEmbed;
   }
 
-  const linkEmbed = convertLinkEmbed(courseContent.video_iframe);
-
   const convertToDate = (date: string) => {
     const dateParsed = new Date(date);
     return dateParsed.toLocaleDateString();
@@ -88,7 +86,7 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
           padding: '0 20rem'
         }}
       >
-        <iframe width="1400" height="600" src={linkEmbed} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+        <iframe width="1400" height="600" src={convertLinkEmbed(courseContent.video_iframe)} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
         <h1
           style={{
             fontSize: '3rem',

@@ -25,7 +25,7 @@ const AuthLayout: FC<Props> = ({ children, title }) => {
         <div>
           <nav className={stylesNav.navbar}>
             <Link href="/">
-              <h2>NombrePagina</h2>
+              <h2>Cursos OnLine</h2>
             </Link>
           </nav>
           {children}

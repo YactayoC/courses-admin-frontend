@@ -1,72 +1,87 @@
-import Image from 'next/image';
 import Link from 'next/link';
-
+import { useAtom } from 'jotai';
+import { userAtom } from 'store/userAtom';
 import styles from 'styles/Navbar.module.css';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
-  const onClickHamburguer = () => {
-    const menuMobile = document.getElementById('menuMobile');
-    if (menuMobile?.style.height === '0px') {
-      return (menuMobile!.style.height = '12rem');
-    }
-    menuMobile!.style.height = '0px';
+  const [user] = useAtom(userAtom);
+  const [isClient, setIsClient] = useState(false)
+  const [userName, setUserName] = useState('')
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
   };
+
+  useEffect(() => {
+    if (user) {
+      setIsClient(true);
+      setUserName(user.nombre);
+    }
+  }, [user]);
+
+  if (!isClient) {
+    // Si el usuario no está logueado, no renderizar el menú desplegable
+    return (
+      <nav className={styles.navbar}>
+        <div className={styles.navbarDesktop}>
+          <ul className={styles.menuNavbar}>
+            <Link href="/home">
+              <h2
+                style={{
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                }}
+              >Cursos OnLine</h2>
+            </Link>
+            <Link href="/home">
+              <li>Inicio</li>
+            </Link>
+          </ul>
+          <Link href="/auth/login">
+            <button type="button" className="btn btn-primary">Iniciar sesión</button>
+          </Link>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className={styles.navbar}>
-      {/* Desktop */}
       <div className={styles.navbarDesktop}>
-        <ul>
-          <Link href="/home">
-            <h2>Curso</h2>
-          </Link>
+        <ul className={styles.menuNavbar}>
+          <h2
+            style={{
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+            onClick={() => window.location.href = '/home'}
+          >Cursos OnLine</h2>
           <Link href="/home">
             <li>Inicio</li>
           </Link>
-          <li>Peliculas</li>
         </ul>
-        <ul>
-          <li>
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </li>
-          <li>
-            <i className="fa-solid fa-bell"></i>
-          </li>
-          <li>
-            <img src="/profile.png" alt="profile" />
-          </li>
-        </ul>
-      </div>
-
-      {/* Mobile */}
-      <div className={styles.navbarMobile}>
-        <div>
-          <ul>
-            <Link href="/home">
-              <h2>ReMovies</h2>
-            </Link>
+        <div className="dropdown">
+          <a className="btn btn-secondary dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{
+            color: 'white',
+            backgroundColor: 'transparent',
+            border: 'none',
+            fontSize: '1.5rem',
+            textDecoration: 'none',
+          }}>
+            <i className="fa-solid fa-bars"></i>
+          </a>
+          <ul className="dropdown-menu">
+            <li><a className="dropdown-item fs-6">{`Hola, ${userName}`}</a></li>
+            <li><Link href="/home"><a className="dropdown-item fs-6">Mis cursos</a></Link></li>
+            <li><a className="dropdown-item fs-6" onClick={handleLogout}>Cerrar sesión</a></li>
           </ul>
         </div>
-
-        {/* Hamburguer */}
-        <div className={styles.navbarHamburguer} onClick={onClickHamburguer}>
-          <i className="fa-solid fa-bars"></i>
-        </div>
-      </div>
-
-      <div id="menuMobile" className={styles.navbarHamburguerMenu}>
-        <ul>
-          <li>Inicio</li>
-          <li>Peliculas</li>
-          <div className={styles.navbarHamburguerMenuIcons}>
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <i className="fa-solid fa-bell"></i>
-            <img src="/profile.png" alt="profile" />
-          </div>
-        </ul>
       </div>
     </nav>
   );
 };
+
 
 export default Navbar;
