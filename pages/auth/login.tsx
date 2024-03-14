@@ -1,5 +1,5 @@
 import Link from 'next/link';
-
+import { ToastContainer, toast } from 'react-toastify';
 import { AuthLayout } from 'components';
 import { useForm } from 'react-hook-form';
 import { loginUser } from 'services/auth';
@@ -11,7 +11,7 @@ import { Role } from 'guards/roles';
 
 const LoginPage = () => {
   const [, setUser] = useAtom(userAtom);
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
   const fetchAuthLogin = async (data: any) => {
     try {
@@ -27,8 +27,8 @@ const LoginPage = () => {
         router.push('/home');
         return
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Error al iniciar sesión');
     }
   }
 
@@ -37,13 +37,19 @@ const LoginPage = () => {
       <div className={stylesAuth.divForm}>
         <h2>Iniciar Sesión</h2>
         <form className={stylesAuth.form} onSubmit={handleSubmit(fetchAuthLogin)}>
-          <div className={stylesAuth.formGroup}>
-            <p>Correo:</p>
-            <input type="email" placeholder="Ingresa tu email" {...register('email', { required: true })} />
+          <div>
+            <div className={stylesAuth.formGroup}>
+              <p>Correo:</p>
+              <input type="email" placeholder="Ingresa tu email" {...register('email', { required: true })} />
+            </div>
+            {errors.email && <span className="text-danger">Este campo es requerido</span>}
           </div>
-          <div className={stylesAuth.formGroup}>
-            <p>Contraseña:</p>
-            <input type="password" placeholder="Ingresa tu contraseña" {...register('password', { required: true })} />
+          <div>
+            <div className={stylesAuth.formGroup}>
+              <p>Contraseña:</p>
+              <input type="password" placeholder="Ingresa tu contraseña" {...register('password', { required: true })} />
+            </div>
+            {errors.password && <span className="text-danger">Este campo es requerido</span>}
           </div>
           <button className="btn btn-primary w-100">Iniciar sesión</button>
           <div className={stylesAuth.formGroup}>
@@ -55,6 +61,7 @@ const LoginPage = () => {
             </span>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </AuthLayout>
   );

@@ -187,24 +187,29 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit(handleAddCategoria)}>
-              <div className="mb-3">
-                <label htmlFor="nombre" className="form-label">
-                  Nombre
-                </label>
-                <input
-                  type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="nombre" className="form-label">
+                    Nombre
+                  </label>
+                  <input
+                    type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
+                </div>
+                {errors.nombre && <span className="text-danger mb-2">Este campo es requerido</span>}
               </div>
-
-              <div className="mb-3">
-                <label htmlFor="comments" className="form-label">
-                  Descripcion
-                </label>
-                <textarea
-                  className="form-control"
-                  id="comments"
-                  placeholder="Escribe la descripcion aquí"
-                  {...register('descripcion', { required: true })}
-                ></textarea>
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="comments" className="form-label">
+                    Descripcion
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="comments"
+                    placeholder="Escribe la descripcion aquí"
+                    {...register('descripcion', { required: true })}
+                  ></textarea>
+                </div>
+                {errors.descripcion && <span className="text-danger mb-2">Este campo es requerido</span>}
               </div>
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary w-50">

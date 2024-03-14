@@ -14,7 +14,7 @@ export const ModalEditCourse = (props: {
     onCourseEdit: () => void
 }) => {
     const { open, onClose, idCurso } = props;
-    const { register, handleSubmit, reset, setValue } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const [dataCourse, setDataCourse] = useState<CursosI>({} as CursosI);
     const [dataCategories, setDataCategories] = useState<CategoryI[]>([] as CategoryI[]);
     const [fileSelected, setFileSelected] = useState<any>(null);
@@ -23,6 +23,7 @@ export const ModalEditCourse = (props: {
     const fetchGetCursoId = async (id: number) => {
         try {
             const response = await getCursoPorId(id);
+            console.log(response.curso)
             setDataCourse(response.curso);
         } catch (error) {
             console.log(error);
@@ -51,17 +52,14 @@ export const ModalEditCourse = (props: {
 
         try {
             const response = await updateCurso(id, formatData);
-            //console.log(response)
             toast.success(response.message);
             reset();
             props.onCourseEdit();
             handleClose();
-            window.location.reload();
         }
         catch (error) {
             console.log(error);
         }
-
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,24 +86,27 @@ export const ModalEditCourse = (props: {
                 <h1 className="modal-title fs-5">Editar Curso</h1>
             </div>
             <div className="modal-body">
-                <form onSubmit={handleSubmit(() => fetchUpdateCurso(idCurso, dataCourse))}>
+                <form onSubmit={handleSubmit(() => { fetchUpdateCurso(idCurso, dataCourse) })}>
                     <div className="mb-3">
-                        <label htmlFor="nombre" className="form-label">
-                            Nombre
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="nombre"
-                            value={dataCourse.nombre || ''}
-                            {...register('nombre')}
-                            onChange={(e) => {
-                                setDataCourse(prevState => ({
-                                    ...prevState,
-                                    nombre: e.target.value,
-                                }));
-                            }}
-                        />
+                        <div className="mb-2">
+                            <label htmlFor="nombre" className="form-label">
+                                Nombre
+                            </label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="nombre"
+                                value={dataCourse.nombre || ''}
+                                {...register('nombre')}
+                                onChange={(e) => {
+                                    setDataCourse(prevState => ({
+                                        ...prevState,
+                                        nombre: e.target.value,
+                                    }));
+                                }}
+                            />
+                        </div>
+                        {}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">

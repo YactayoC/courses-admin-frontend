@@ -29,6 +29,8 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
     reset,
   } = useForm<Comentario>();
 
+  //console.log(courseContent)
+
   const handleGetCommentsByIdCourse = async (idCourse: string) => {
     const response = await getCommentsByIdCourse(idCourse);
     setComentarios(response.comentarios);
@@ -44,9 +46,16 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
     reset();
   };
 
-  const convertLinkEmbed = (link: string) => {
-    const linkEmbed = link.replace('watch?v=', 'embed/');
-    return linkEmbed;
+  const convertLinkEmbed = (link: string): string => {
+    if (link.includes("www.youtube.com/watch?v=")) {
+      return link.replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/');
+    }
+    else if (link.includes("youtu.be")) {
+      const videoId = link.split("/").pop();
+      return `https://www.youtube.com/embed/${videoId}`;
+    } else {
+      return link;
+    }
   }
 
   const convertToDate = (date: string) => {

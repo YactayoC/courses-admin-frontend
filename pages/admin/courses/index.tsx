@@ -12,7 +12,6 @@ import Loader from 'components/loader/loader';
 import { getCategorias } from 'services/categorias';
 import { CategoryI } from 'interfaces/categorias';
 import styles from '../Courses.module.css';
-import { da } from 'date-fns/locale';
 import { ModalEditCourse } from 'components/modal/ModalEditCourse';
 
 const CoursesPage = () => {
@@ -24,6 +23,7 @@ const CoursesPage = () => {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [fileSelected, setFileSelected] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const {
     handleSubmit,
     register,
@@ -40,7 +40,6 @@ const CoursesPage = () => {
       formData.append('categoria_id', Number(data.categoria_id).toString());
       formData.append('descripcion', data.descripcion);
       formData.append('file', data.file[0]);
-      //console.log(data)
       const response = await addCurso(formData);
       toast.success(response.message);
       reset();
@@ -55,7 +54,6 @@ const CoursesPage = () => {
   const fetchCursos = async () => {
     try {
       const response = await getCursos();
-      //onsole.log(response.cursos)
       setCourses(response.cursos);
     } catch (error) {
       toast.error('No se pudo cargar la lista de categorías');
@@ -99,6 +97,12 @@ const CoursesPage = () => {
     toast.success('Cursos cargados correctamente');
   }, []);
 
+  useEffect(() => {
+    if (showModalAdd) {
+      setFileSelected(null)
+    }
+  }, [showModalAdd]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -139,7 +143,6 @@ const CoursesPage = () => {
                   <th>Imagen</th>
                   <th>Descripcion</th>
                   <th>Categoria</th>
-                  {/* <th>Video</th> */}
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -187,7 +190,10 @@ const CoursesPage = () => {
           </div>
         </section>
 
-        <Modal open={showModalAdd} onClose={() => setShowModalAdd(false)} center>
+        <Modal open={showModalAdd} onClose={() => {
+          reset()
+          setShowModalAdd(false)
+        }} center>
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
               Agregar Curso
@@ -195,57 +201,75 @@ const CoursesPage = () => {
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit(fetchAddCurso)}>
-              <div className="mb-3">
-                <label htmlFor="nombre" className="form-label">
-                  Nombre
-                </label>
-                <input type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="nombre" className="form-label">
+                    Nombre
+                  </label>
+                  <input type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
+                </div>
+                {errors.nombre && <span className="text-danger">Este campo es requerido</span>}
               </div>
-              <div className="mb-3">
-                <label htmlFor="urlImagen" className="form-label">
-                  URL Imagen
-                </label>
-                <input className="form-control" type="file" id="formFile" {...register('file', { required: true })} onChange={handleFileChange} />
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="urlImagen" className="form-label">
+                    URL Imagen
+                  </label>
+                  <input className="form-control" type="file" id="formFile" {...register('file', { required: true })} onChange={handleFileChange} />
+                  {fileSelected && (
+                    <img src={fileSelected} alt="Imagen" style={{ width: '100px' }} />
+                  )}
+                </div>
+                {errors.file && <span className="text-danger">Este campo es requerido</span>}
               </div>
-              <div className="mb-3">
-                <label htmlFor="urlVideo" className="form-label">
-                  URL Video Iframe
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="urlVideo"
-                  {...register('video_iframe', { required: true })}
-                />
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="urlVideo" className="form-label">
+                    URL Video Iframe
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="urlVideo"
+                    {...register('video_iframe', { required: true })}
+                  />
+                </div>
+                {errors.video_iframe && <span className="text-danger">Este campo es requerido</span>}
               </div>
-              <div className="mb-3">
-                <label htmlFor="selectOption" className="form-label">
-                  Selecciona una opción
-                </label>
-                <select
-                  className="form-select"
-                  id="selectOption"
-                  aria-label="Selecciona una opción"
-                  {...register('categoria_id', { required: true })}
-                >
-                  <option value="">Selecciona...</option>
-                  {categorias?.map((category: CategoryI) => (
-                    <option value={category.id} key={category.id + 10}>
-                      {category.nombre}
-                    </option>
-                  ))}
-                </select>
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="selectOption" className="form-label">
+                    Selecciona una opción
+                  </label>
+                  <select
+                    className="form-select"
+                    id="selectOption"
+                    aria-label="Selecciona una opción"
+                    {...register('categoria_id', { required: true })}
+                  >
+                    <option value="">Selecciona...</option>
+                    {categorias?.map((category: CategoryI) => (
+                      <option value={category.id} key={category.id + 10}>
+                        {category.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.categoria_id && <span className="text-danger">Este campo es requerido</span>}
               </div>
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">
-                  Descripcion
-                </label>
-                <textarea
-                  className="form-control"
-                  id="description"
-                  placeholder="Escribe tus comentarios aquí"
-                  {...register('descripcion', { required: true })}
-                ></textarea>
+              <div className="mb-2">
+                <div className="mb-1">
+                  <label htmlFor="description" className="form-label">
+                    Descripcion
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="description"
+                    placeholder="Escribe tus comentarios aquí"
+                    {...register('descripcion', { required: true })}
+                  ></textarea>
+                </div>
+                {errors.descripcion && <span className="text-danger">Este campo es requerido</span>}
               </div>
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary w-50">
