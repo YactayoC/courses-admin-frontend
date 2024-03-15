@@ -1,23 +1,21 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { Modal } from 'react-responsive-modal';
 
 import AdminLayout from 'components/layouts/AdminLayout';
-import { addCurso, getCursos, eliminarCurso, updateCurso } from 'services/cursos';
-import { CursosI } from '../../../interfaces/cursos';
+import { addCurso, getCursos, eliminarCurso } from 'services/cursos';
+import { CursoI } from '../../../interfaces/cursos';
 import Loader from 'components/loader/loader';
 import { getCategorias } from 'services/categorias';
 import { CategoryI } from 'interfaces/categorias';
-import styles from '../Courses.module.css';
 import { ModalEditCourse } from 'components/modal/ModalEditCourse';
+import styles from '../Courses.module.css';
 
 const CoursesPage = () => {
-  const [courses, setCourses] = useState<CursosI[]>([{} as CursosI]);
+  const [courses, setCourses] = useState<CursoI[]>([{} as CursoI]);
   const [categorias, setCategorias] = useState<CategoryI[]>([{} as CategoryI]);
-  const [cursoSeleccionado, setCursoSeleccionado] = useState<CursosI>({} as CursosI);
+  const [cursoSeleccionado, setCursoSeleccionado] = useState<CursoI>({} as CursoI);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
@@ -29,24 +27,25 @@ const CoursesPage = () => {
     register,
     formState: { errors },
     reset,
-  } = useForm<CursosI>();
+    watch,
+  } = useForm<CursoI>();
 
-  const fetchAddCurso = async (data: CursosI) => {
+  const fetchAddCurso = async (data: CursoI) => {
     try {
-
       const formData = new FormData();
       formData.append('nombre', data.nombre);
       formData.append('video_iframe', data.video_iframe);
       formData.append('categoria_id', Number(data.categoria_id).toString());
       formData.append('descripcion', data.descripcion);
       formData.append('file', data.file[0]);
+      formData.append('tiene_animacion', data.tiene_animacion.toString());
       const response = await addCurso(formData);
       toast.success(response.message);
       reset();
       fetchCursos();
       setShowModalAdd(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error('No se pudo agregar el curso');
     }
   };
@@ -64,7 +63,7 @@ const CoursesPage = () => {
 
   const fetchDeleteCurso = async (id: number) => {
     try {
-      setCursoSeleccionado({} as CursosI);
+      setCursoSeleccionado({} as CursoI);
       const response = await eliminarCurso(id);
       toast.success(response.message);
       fetchCursos();
@@ -99,7 +98,7 @@ const CoursesPage = () => {
 
   useEffect(() => {
     if (showModalAdd) {
-      setFileSelected(null)
+      setFileSelected(null);
     }
   }, [showModalAdd]);
 
@@ -147,15 +146,19 @@ const CoursesPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {courses?.map((course: CursosI) => (
+                {courses?.map((course: CursoI) => (
                   <tr key={course.id}>
                     <td>{course.nombre}</td>
                     <td>
-                      <img src={course.imagen_url} alt="Imagen" style={{
-                        width: '8rem',
-                        height: '6rem',
-                        objectFit: 'cover',
-                      }} />
+                      <img
+                        src={course.imagen_url}
+                        alt="Imagen"
+                        style={{
+                          width: '8rem',
+                          height: '6rem',
+                          objectFit: 'cover',
+                        }}
+                      />
                     </td>
                     <td>{course.descripcion}</td>
                     <td>{course.categoria_nombre}</td>
@@ -190,10 +193,14 @@ const CoursesPage = () => {
           </div>
         </section>
 
-        <Modal open={showModalAdd} onClose={() => {
-          reset()
-          setShowModalAdd(false)
-        }} center>
+        <Modal
+          open={showModalAdd}
+          onClose={() => {
+            reset();
+            setShowModalAdd(false);
+          }}
+          center
+        >
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
               Agregar Curso
@@ -215,10 +222,14 @@ const CoursesPage = () => {
                   <label htmlFor="urlImagen" className="form-label">
                     URL Imagen
                   </label>
-                  <input className="form-control" type="file" id="formFile" {...register('file', { required: true })} onChange={handleFileChange} />
-                  {fileSelected && (
-                    <img src={fileSelected} alt="Imagen" style={{ width: '100px' }} />
-                  )}
+                  <input
+                    className="form-control"
+                    type="file"
+                    id="formFile"
+                    {...register('file', { required: true })}
+                    onChange={handleFileChange}
+                  />
+                  {fileSelected && <img src={fileSelected} alt="Imagen" style={{ width: '100px' }} />}
                 </div>
                 {errors.file && <span className="text-danger">Este campo es requerido</span>}
               </div>
@@ -239,7 +250,7 @@ const CoursesPage = () => {
               <div className="mb-2">
                 <div className="mb-1">
                   <label htmlFor="selectOption" className="form-label">
-                    Selecciona una opción
+                    Selecciona una categoria
                   </label>
                   <select
                     className="form-select"
@@ -271,6 +282,34 @@ const CoursesPage = () => {
                 </div>
                 {errors.descripcion && <span className="text-danger">Este campo es requerido</span>}
               </div>
+              <div className="mb-2">
+                {/* Checkbox */}
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckDefault"
+                    {...register('tiene_animacion')}
+                  />
+                  <label className="form-check-label" htmlFor="flexCheckDefault">
+                    Agregar animacion
+                  </label>
+                </div>
+                {watch('tiene_animacion') && (
+                  <div className="overflow-hidden">
+                    <img
+                      src={fileSelected}
+                      alt="img temp"
+                      className={styles['img-hover'] + ' form-control'}
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary w-50">
                   Agregar
@@ -280,7 +319,12 @@ const CoursesPage = () => {
           </div>
         </Modal>
 
-        <ModalEditCourse open={showModalEdit} onClose={() => setShowModalEdit(false)} idCurso={cursoSeleccionado.id!} onCourseEdit={fetchCursos} />
+        <ModalEditCourse
+          open={showModalEdit}
+          onClose={() => setShowModalEdit(false)}
+          idCurso={cursoSeleccionado.id!}
+          onCourseEdit={fetchCursos}
+        />
 
         <Modal open={showModalDelete} onClose={() => setShowModalDelete(false)} center>
           <div className="modal-header">

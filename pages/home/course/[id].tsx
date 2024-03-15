@@ -10,7 +10,8 @@ import { Comentario } from 'interfaces/comment';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
 import { userAtom } from 'store/userAtom';
-import { Rating } from 'react-simple-star-rating'
+import { Rating } from 'react-simple-star-rating';
+import { getCursoPorId } from 'services/cursos';
 
 interface Props {
   courseContent: CursoItemI;
@@ -19,10 +20,10 @@ interface Props {
 
 const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true }) => {
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(0);
   const [user] = useAtom(userAtom);
   const [courseId, setCourseId] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado inicial falso
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const {
     handleSubmit,
@@ -33,21 +34,17 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
 
   const handleRating = (rate: number) => {
     setRating(rate);
-  }
+  };
 
   const handleGetCommentsByIdCourse = async (idCourse: string) => {
     const response = await getCommentsByIdCourse(idCourse);
     setComentarios(response.comentarios);
     setCourseId(String(courseContent.id));
-  }
+  };
 
-  const onPointerEnter = () => console.log('Enter')
-  const onPointerLeave = () => console.log('Leave')
-  const onPointerMove = (value: number, index: number) => console.log(value, index)
-
-  if (isLoading) {
-    return <Loader />;
-  }
+  const onPointerEnter = () => console.log('Enter');
+  const onPointerLeave = () => console.log('Leave');
+  const onPointerMove = (value: number, index: number) => console.log(value, index);
 
   const handleAddComment = async (data: Comentario) => {
     await addComment({ usuarioId: Number(user?.id), cursoId: Number(courseId), comentario: data.comentario });
@@ -56,26 +53,25 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
   };
 
   const convertLinkEmbed = (link: string): string => {
-    if (link.includes("www.youtube.com/watch?v=")) {
+    if (link.includes('www.youtube.com/watch?v=')) {
       return link.replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/');
-    }
-    else if (link.includes("youtu.be")) {
-      const videoId = link.split("/").pop();
+    } else if (link.includes('youtu.be')) {
+      const videoId = link.split('/').pop();
       return `https://www.youtube.com/embed/${videoId}`;
     } else {
       return link;
     }
-  }
+  };
 
   const convertToDate = (date: string) => {
     const dateParsed = new Date(date);
     return dateParsed.toLocaleDateString();
-  }
+  };
 
   const convertToHour = (date: string) => {
     const dateParsed = new Date(date);
     return dateParsed.toLocaleTimeString();
-  }
+  };
 
   useEffect(() => {
     handleGetCommentsByIdCourse(String(courseContent.id));
@@ -86,26 +82,34 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
     setIsLoggedIn(!!userFromLocalStorage);
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <>
-      <HomeLayout title={`ReMovies`}>
+      <HomeLayout title={`Curso - ${courseContent.nombre}`}>
         <div className={styles.hero}>
           <Navbar />
         </div>
       </HomeLayout>
       {/* VIDEO Y DESCRIPCION */}
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row-reverse',
-          alignItems: 'center',
-          columnGap: '10rem',
-          marginTop: '3rem',
-          marginBottom: '5rem',
-          padding: '0 10rem'
-        }}
+        className="d-flex flex-lg-row-reverse justify-content-center align-items-center gap-5 mt-5 mb-5 px-10
+       flex-column gap-md-4 container
+      "
       >
-        <iframe width="6500" height="600" src={convertLinkEmbed(courseContent.video_iframe)} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+        <iframe
+          style={{
+            width: '600px',
+            height: '450px',
+          }}
+          className="rounded-lg w-100 w-md-100 h-md-100"
+          src={convertLinkEmbed(courseContent.video_iframe)}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
 
         <div
           style={{
@@ -119,7 +123,9 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
               fontSize: '3rem',
               fontWeight: 'bold',
             }}
-          >{courseContent.nombre}</h1>
+          >
+            {courseContent.nombre}
+          </h1>
           <Rating
             style={{ marginBottom: '1rem' }}
             onClick={handleRating}
@@ -130,20 +136,13 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
           {/* RATING BOOTSTRAP */}
           <p>{courseContent.descripcion}</p>
         </div>
-
       </div>
-      {/* COMENTARIO */}
-      <div
-        style={{
-          padding: '0 15rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-
+      <div className="container d-flex justify-content-center align-items-center flex-column">
         {isLoggedIn ? (
-          <form style={{ width: '80%', display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit(handleAddComment)}>
+          <form
+            style={{ width: '80%', display: 'flex', flexDirection: 'column' }}
+            onSubmit={handleSubmit(handleAddComment)}
+          >
             <div className="input-group mb-3">
               <input
                 type="text"
@@ -156,10 +155,15 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
                 }}
                 {...register('comentario', { required: true })} // Vincula el input al estado con useForm
               />
-              <button className="btn btn-outline-secondary" type="submit" id="button-addon2">Guardar comentario</button>
+              <button className="btn btn-outline-secondary" type="submit" id="button-addon2">
+                Guardar comentario
+              </button>
             </div>
             {errors.comentario && <span style={{ color: 'red', marginTop: '-1rem' }}>Este campo es requerido.</span>}
-          </form>) : (<></>)}
+          </form>
+        ) : (
+          <></>
+        )}
         <div
           style={{
             width: '100%',
@@ -169,12 +173,16 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
           }}
         >
           {comentarios.map((comment) => (
-            <div key={comment.id} className="media mb-4" style={{
-              padding: '1.8rem 2rem',
-              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-              borderRadius: '0.8rem',
-              backgroundColor: '#F5F5F5',
-            }}>
+            <div
+              key={comment.id}
+              className="media mb-4"
+              style={{
+                padding: '1.8rem 2rem',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                borderRadius: '0.8rem',
+                backgroundColor: '#F5F5F5',
+              }}
+            >
               <img
                 src="https://via.placeholder.com/64"
                 className="mr-3 rounded-circle"
@@ -193,19 +201,25 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
                     style={{
                       marginBottom: '0',
                     }}
-                  >{comment.nombre}</h5>
+                  >
+                    {comment.nombre}
+                  </h5>
                   <p
                     style={{
                       color: 'gray',
                     }}
-                  >{convertToHour(comment.fecha)}</p>
+                  >
+                    {convertToHour(comment.fecha)}
+                  </p>
                 </div>
                 <p
                   style={{
                     marginBottom: '0.5rem',
                     marginTop: '0.5rem',
                   }}
-                >{comment.comentario}</p>
+                >
+                  {comment.comentario}
+                </p>
                 <small className="text-muted">Subido el día {convertToDate(comment.fecha)}</small>
               </div>
             </div>
@@ -216,13 +230,12 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { cursoItem } = query;
-  const parsedCursoItem = cursoItem ? JSON.parse(cursoItem as string) : null;
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const response = await getCursoPorId(Number(params?.id));
 
   return {
     props: {
-      courseContent: parsedCursoItem,
+      courseContent: response.curso,
       isLoading: false,
     },
   };

@@ -10,7 +10,6 @@ interface User {
 let initialUser: User | null = null;
 
 if (typeof window !== 'undefined') {
-  // Verificar si estamos en el entorno del navegador
   const storedUser = localStorage.getItem('user');
   if (storedUser) {
     initialUser = JSON.parse(storedUser);

@@ -9,3 +9,11 @@
   overflow-x: auto;
   width: 100%;
 }
+
+.img-hover {
+  transition: transform 0.5s;
+}
+
+.img-hover:hover {
+  transform: scale(1.1);
+}

@@ -1,11 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
 import { FC } from 'react';
 import { useRouter } from 'next/router';
 
-import { CursoItemI } from 'interfaces/cursoItem';
+import { CursoI } from 'interfaces/cursos';
+import styles from 'styles/Home.module.css';
 
 interface Props {
-  cursoItem: CursoItemI;
+  cursoItem: CursoI;
 }
 
 const Course: FC<Props> = ({ cursoItem }) => {
@@ -14,25 +14,36 @@ const Course: FC<Props> = ({ cursoItem }) => {
   const onClickSelectCourse = () => {
     router.push({
       pathname: `/home/course/${cursoItem.id}`,
-      query: { cursoItem: JSON.stringify(cursoItem) }
     });
   };
   return (
-
     <div className="card">
-      <img
-        src={cursoItem.imagen_url}
-        className="card-img-top"
-        style={{
-          height: '20rem',
-          objectFit: 'cover',
-        }}
-        alt="..."
-      />
+      {cursoItem.tiene_animacion ? (
+        <div className="overflow-hidden">
+          <img
+            src={cursoItem.imagen_url}
+            className={`card-img-top ${styles.img_hover}`}
+            style={{
+              height: '20rem',
+              objectFit: 'cover',
+            }}
+            alt="imagen del curso"
+          />
+        </div>
+      ) : (
+        <img
+          src={cursoItem.imagen_url}
+          className="card-img-top"
+          style={{
+            height: '20rem',
+            objectFit: 'cover',
+          }}
+          alt="imagen del curso"
+        />
+      )}
+
       <div className="card-body">
-        <h5 className="card-title">
-          {cursoItem.nombre}
-        </h5>
+        <h5 className="card-title">{cursoItem.nombre}</h5>
         <p className="card-text" style={{ marginTop: '2rem' }}>
           {cursoItem.descripcion}
         </p>

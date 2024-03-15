@@ -1,4 +1,4 @@
-export interface CursosI {
+export interface CursoI {
   id?: number;
   nombre: string;
   descripcion: string;
@@ -7,6 +7,7 @@ export interface CursosI {
   categoria_id: number;
   categoria_nombre?: string;
   file?: any;
+  tiene_animacion: boolean;
 }
 export interface FormData {
   append(name: string, value: any, fileName?: string): void;

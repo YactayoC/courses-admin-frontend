@@ -8,7 +8,11 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const RegisterPage = () => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const fetchAuthRegister = async (data: any) => {
     try {
@@ -17,10 +21,10 @@ const RegisterPage = () => {
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error al registrar');
     }
-  }
+  };
 
   return (
-    <AuthLayout title={'Removies Perú: Iniciar Sesión'}>
+    <AuthLayout title={'Cursos: Registro'}>
       <div className={stylesAuth.divForm}>
         <h2>Registrate</h2>
         <form className={stylesAuth.form} onSubmit={handleSubmit(fetchAuthRegister)}>
@@ -41,7 +45,11 @@ const RegisterPage = () => {
           <div>
             <div className={stylesAuth.formGroup}>
               <p>Contraseña:</p>
-              <input type="password" placeholder="Ingresa tu contraseña" {...register('password', { required: true })} />
+              <input
+                type="password"
+                placeholder="Ingresa tu contraseña"
+                {...register('password', { required: true })}
+              />
             </div>
             {errors.password && <span className="text-danger">Este campo es requerido</span>}
           </div>

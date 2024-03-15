@@ -3,9 +3,8 @@ import { Navbar, PreviousLayout } from 'components';
 import styles from 'styles/Previous.module.css';
 
 const PreviousPage: NextPage = () => {
-
   return (
-    <PreviousLayout title={'Removies Perú: Peliculas'}>
+    <PreviousLayout title={'Cursos'}>
       <Navbar />
       <div className={styles.heading}>
         <h1>Plataforma de cursos</h1>

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { getCategorias } from 'services/categorias';
 import { CategoryI } from 'interfaces/categorias';
 import { toast } from 'react-toastify';
-import { CursosI } from 'interfaces/cursos';
+import { CursoI } from 'interfaces/cursos';
 import { getCursos } from 'services/cursos';
 import { useAtom } from 'jotai';
 import { userAtom } from 'store/userAtom';
@@ -16,7 +16,7 @@ import { userAtom } from 'store/userAtom';
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryI[]>([{}] as CategoryI[]);
-  const [courses, setCourses] = useState<CursosI[]>([{} as CursosI]);
+  const [courses, setCourses] = useState<CursoI[]>([{} as CursoI]);
   const [user] = useAtom(userAtom);
 
   //console.log(user)
@@ -55,14 +55,14 @@ const HomePage = () => {
 
   return (
     <>
-      <HomeLayout title="ReMovies">
+      <HomeLayout title="Cursos">
         <div className={styles.hero}>
           <Navbar />
         </div>
         <div className={styles.allCourses}>
           {categories
-            .filter(category => category.id !== undefined) // Filtrar elementos vacíos
-            .filter(category => courses.filter(curso => curso.categoria_id === category.id).length > 0)
+            .filter((category) => category.id !== undefined)
+            .filter((category) => courses.filter((curso) => curso.categoria_id === category.id).length > 0)
             .map((category) => (
               <div className={styles.movieCategory} key={category.id}>
                 <h2>{category.nombre}</h2>

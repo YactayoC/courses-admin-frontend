@@ -1,11 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 import AdminLayout from 'components/layouts/AdminLayout';
 
 import styles from '../Courses.module.css';
 import { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
-import { addCategoria, editarCategoria, eliminarCategoria, getCategorias, obtenerCategoriaPorId } from 'services/categorias';
+import {
+  addCategoria,
+  editarCategoria,
+  eliminarCategoria,
+  getCategorias,
+  obtenerCategoriaPorId,
+} from 'services/categorias';
 import Loader from 'components/loader/loader';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
@@ -56,7 +60,7 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
     } catch (error) {
       toast.error('No se pudo editar la categoria');
     }
-  }
+  };
 
   const fetchCategorias = async () => {
     try {
@@ -89,7 +93,7 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
     } catch (error) {
       toast.error('No se pudo cargar la categoria');
     }
-  }
+  };
 
   useEffect(() => {
     if (responseCategorias) {
@@ -192,8 +196,7 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
                   <label htmlFor="nombre" className="form-label">
                     Nombre
                   </label>
-                  <input
-                    type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
+                  <input type="text" className="form-control" id="nombre" {...register('nombre', { required: true })} />
                 </div>
                 {errors.nombre && <span className="text-danger mb-2">Este campo es requerido</span>}
               </div>
@@ -295,9 +298,9 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
             </div>
           </div>
         </Modal>
-      </div >
+      </div>
       <ToastContainer />
-    </AdminLayout >
+    </AdminLayout>
   );
 };
 

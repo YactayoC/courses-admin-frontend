@@ -11,29 +11,35 @@ import { Role } from 'guards/roles';
 
 const LoginPage = () => {
   const [, setUser] = useAtom(userAtom);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const router = useRouter();
   const fetchAuthLogin = async (data: any) => {
     try {
       const response = await loginUser(data);
       setUser(response.user);
       localStorage.setItem('user', JSON.stringify(response.user));
-      const userRolName = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).rol_name : null;
+      const userRolName = localStorage.getItem('user')
+        ? JSON.parse(localStorage.getItem('user') as string).rol_name
+        : null;
       //console.log(response.user)
       if (userRolName === Role.ADMIN) {
         router.push('/admin/courses');
-        return
+        return;
       } else if (userRolName === Role.CLIENTE) {
         router.push('/home');
-        return
+        return;
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error al iniciar sesión');
     }
-  }
+  };
 
   return (
-    <AuthLayout title={'Removies Perú: Iniciar Sesión'}>
+    <AuthLayout title={'Cursos: Iniciar Sesión'}>
       <div className={stylesAuth.divForm}>
         <h2>Iniciar Sesión</h2>
         <form className={stylesAuth.form} onSubmit={handleSubmit(fetchAuthLogin)}>
@@ -47,7 +53,11 @@ const LoginPage = () => {
           <div>
             <div className={stylesAuth.formGroup}>
               <p>Contraseña:</p>
-              <input type="password" placeholder="Ingresa tu contraseña" {...register('password', { required: true })} />
+              <input
+                type="password"
+                placeholder="Ingresa tu contraseña"
+                {...register('password', { required: true })}
+              />
             </div>
             {errors.password && <span className="text-danger">Este campo es requerido</span>}
           </div>

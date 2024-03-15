@@ -146,3 +146,11 @@
 .commentBody {
   margin-top: 5px;
 }
+
+.img_hover {
+  transition: transform 0.5s;
+}
+
+.img_hover:hover {
+  transform: scale(1.1);
+}

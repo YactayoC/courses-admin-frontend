@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const index = () => {
   return (
-    <AuthLayout title={'Removies Perú: Iniciar Sesión'}>
+    <AuthLayout title={'Cursos'}>
       <div className={stylesAuth.divForm}>
         <h2>Iniciar Sesión</h2>
         <form className={stylesAuth.form}>

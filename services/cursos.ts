@@ -1,6 +1,6 @@
 import leogAPI from 'api/leogAPI';
 import { FormData } from 'interfaces/cursos';
-import { CursosI } from 'interfaces/cursos';
+import { CursoI } from 'interfaces/cursos';
 
 export const getCursos = async () => {
   const { data } = await leogAPI.get(`/admin/cursos`);
