@@ -17,11 +17,11 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }: AuthGuardProps) => {
             if (router.pathname.startsWith('/admin/courses') || router.pathname.startsWith('/admin/categories')) {
                 router.push('/auth/login');
             }
-        } else if (rol_name === Role.Admin) {
+        } else if (rol_name === Role.ADMIN) {
             if (!router.pathname.startsWith('/admin/courses') && !router.pathname.startsWith('/admin/categories')) {
                 router.push('/auth/login');
             }
-        } else if (rol_name === Role.Cliente) {
+        } else if (rol_name === Role.CLIENTE) {
             if (router.pathname.startsWith('/admin/courses') || router.pathname.startsWith('/admin/categories')) {
                 router.push('/home');
             } else if (router.pathname.startsWith('/auth/login') || router.pathname.startsWith('/auth/register')) {
