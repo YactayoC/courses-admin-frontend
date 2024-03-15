@@ -74,7 +74,7 @@ const Navbar = () => {
           </a>
           <ul className="dropdown-menu">
             <li><a className="dropdown-item fs-6">{`Hola, ${userName}`}</a></li>
-            <li><Link href="/home"><a className="dropdown-item fs-6">Mis cursos</a></Link></li>
+            {/* <li><Link href="/home"><a className="dropdown-item fs-6">Mis cursos</a></Link></li> */}
             <li><a className="dropdown-item fs-6" onClick={handleLogout}>Cerrar sesión</a></li>
           </ul>
         </div>
