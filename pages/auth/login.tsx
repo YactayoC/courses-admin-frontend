@@ -20,10 +20,10 @@ const LoginPage = () => {
       localStorage.setItem('user', JSON.stringify(response.user));
       const userRolName = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string).rol_name : null;
       //console.log(response.user)
-      if (userRolName === Role.Admin) {
+      if (userRolName === Role.ADMIN) {
         router.push('/admin/courses');
         return
-      } else if (userRolName === Role.Cliente) {
+      } else if (userRolName === Role.CLIENTE) {
         router.push('/home');
         return
       }

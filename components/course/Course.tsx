@@ -19,9 +19,7 @@ const Course: FC<Props> = ({ cursoItem }) => {
   };
   return (
 
-    <div className="card" style={{
-      width: '30rem',
-    }}>
+    <div className="card">
       <img
         src={cursoItem.imagen_url}
         className="card-img-top"
