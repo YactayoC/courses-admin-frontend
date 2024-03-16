@@ -3,15 +3,18 @@ import { useAtom } from 'jotai';
 import { userAtom } from 'store/userAtom';
 import styles from 'styles/Navbar.module.css';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Navbar = () => {
+  const router = useRouter();
   const [user] = useAtom(userAtom);
   const [isClient, setIsClient] = useState(false);
   const [userName, setUserName] = useState('');
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.reload();
+    router.push('/auth/login');
+    // window.location.reload();
   };
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const Navbar = () => {
               </h2>
             </Link>
             <Link href="/home">
-              <li>Inicio</li>
+              <li>Cursos</li>
             </Link>
           </ul>
           <Link href="/auth/login">
@@ -64,7 +67,7 @@ const Navbar = () => {
             Cursos OnLine
           </h2>
           <Link href="/home">
-            <li>Inicio</li>
+            <li>Cursos</li>
           </Link>
         </ul>
         <div className="dropdown">
@@ -88,7 +91,6 @@ const Navbar = () => {
             <li>
               <a className="dropdown-item fs-6">{`Hola, ${userName}`}</a>
             </li>
-            {/* <li><Link href="/home"><a className="dropdown-item fs-6">Mis cursos</a></Link></li> */}
             <li>
               <a className="dropdown-item fs-6" onClick={handleLogout}>
                 Cerrar sesión

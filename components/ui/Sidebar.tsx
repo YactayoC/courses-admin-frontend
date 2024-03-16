@@ -34,8 +34,8 @@ const Sidebar = () => {
       </nav>
 
       <aside className="main-sidebar sidebar-dark-primary elevation-4">
-        <a href="index3.html" className="brand-link">
-          <span className="brand-text font-weight-light">Nombre empresa</span>
+        <a href="#" className="brand-link">
+          <span className="brand-text font-weight-light">Empresa</span>
         </a>
 
         <div className="sidebar">

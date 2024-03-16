@@ -209,6 +209,7 @@ const CategoriesPage = ({ responseCategorias, isLoadingFetch }: Props) => {
                     className="form-control"
                     id="comments"
                     placeholder="Escribe la descripcion aquí"
+                    style={{ height: '200px' }}
                     {...register('descripcion', { required: true })}
                   ></textarea>
                 </div>

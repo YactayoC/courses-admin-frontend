@@ -3,7 +3,6 @@ import { GetServerSideProps, NextPage } from 'next';
 import { HomeLayout, Navbar } from 'components';
 import Loader from 'components/loader/loader';
 import styles from 'styles/Home.module.css';
-import { CursoItemI } from 'interfaces/cursoItem';
 import { useEffect, useState } from 'react';
 import { getCommentsByIdCourse, addComment } from 'services/comment';
 import { Comentario } from 'interfaces/comment';
@@ -14,7 +13,7 @@ import { Rating } from 'react-simple-star-rating';
 import { getCursoPorId } from 'services/cursos';
 
 interface Props {
-  courseContent: CursoItemI;
+  courseContent: any;
   isLoading: boolean;
 }
 
@@ -96,12 +95,10 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
       {/* VIDEO Y DESCRIPCION */}
       <div
         className="d-flex flex-lg-row-reverse justify-content-center align-items-center gap-5 mt-5 mb-5 px-10
-       flex-column gap-md-4 container
-      "
-      >
+       flex-column gap-md-4 container">
         <iframe
           style={{
-            width: '600px',
+            width: 'auto',
             height: '450px',
           }}
           className="rounded-lg w-100 w-md-100 h-md-100"
@@ -116,6 +113,7 @@ const CoursesSelectedPage: NextPage<Props> = ({ courseContent, isLoading = true 
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
+            width: '100%',
           }}
         >
           <h1
